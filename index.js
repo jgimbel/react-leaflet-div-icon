@@ -16,8 +16,6 @@ var _reactDom = require('react-dom');
 
 var _leaflet = require('leaflet');
 
-var _latlng = require('react-leaflet/types/latlng');
-
 var _reactLeaflet = require('react-leaflet');
 
 var _reactLeaflet2 = _interopRequireDefault(_reactLeaflet);
@@ -93,7 +91,6 @@ var Divicon = function (_MapLayer) {
 
 Divicon.propTypes = {
   opacity: _react.PropTypes.number,
-  position: _latlng.latlngType.isRequired,
   zIndexOffset: _react.PropTypes.number
 };
 exports.default = Divicon;

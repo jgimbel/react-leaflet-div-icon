@@ -1,14 +1,11 @@
 import { PropTypes } from 'react';
 import { render } from 'react-dom';
 import { DivIcon, marker } from 'leaflet';
-
-import { latlngType } from 'react-leaflet/types/latlng';
 import MapLayer from 'react-leaflet';
 
 export default class Divicon extends MapLayer {
   static propTypes = {
     opacity: PropTypes.number,
-    position: latlngType.isRequired,
     zIndexOffset: PropTypes.number,
   };
 
