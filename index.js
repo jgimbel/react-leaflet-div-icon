@@ -4,21 +4,23 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
 var _react = require('react');
 
+var _reactDom = require('react-dom');
+
 var _leaflet = require('leaflet');
 
-var _latlng = require('./types/latlng');
+var _latlng = require('react-leaflet/types/latlng');
 
-var _latlng2 = _interopRequireDefault(_latlng);
+var _reactLeaflet = require('react-leaflet');
 
-var _MapLayer2 = require('./MapLayer');
-
-var _MapLayer3 = _interopRequireDefault(_MapLayer2);
+var _reactLeaflet2 = _interopRequireDefault(_reactLeaflet);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -30,19 +32,20 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Marker = function (_MapLayer) {
-  _inherits(Marker, _MapLayer);
+var Divicon = function (_MapLayer) {
+  _inherits(Divicon, _MapLayer);
 
-  function Marker() {
-    _classCallCheck(this, Marker);
+  function Divicon() {
+    _classCallCheck(this, Divicon);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(Marker).apply(this, arguments));
+    return _possibleConstructorReturn(this, Object.getPrototypeOf(Divicon).apply(this, arguments));
   }
 
-  _createClass(Marker, [{
+  _createClass(Divicon, [{
     key: 'componentWillMount',
     value: function componentWillMount() {
-      _get(Object.getPrototypeOf(Marker.prototype), 'componentWillMount', this).call(this);
+      _get(Object.getPrototypeOf(Divicon.prototype), 'componentWillMount', this).call(this);
+      this.icon = new _leaflet.DivIcon(props);
       var _props = this.props;
       var _map = _props.map;
       var _lc = _props.layerContainer;
@@ -50,16 +53,13 @@ var Marker = function (_MapLayer) {
 
       var props = _objectWithoutProperties(_props, ['map', 'layerContainer', 'position']);
 
-      this.leafletElement = (0, _leaflet.marker)(position, props);
+      this.leafletElement = (0, _leaflet.marker)(position, _extends({ icon: this.icon }, props));
     }
   }, {
     key: 'componentDidUpdate',
     value: function componentDidUpdate(prevProps) {
       if (this.props.position !== prevProps.position) {
         this.leafletElement.setLatLng(this.props.position);
-      }
-      if (this.props.icon !== prevProps.icon) {
-        this.leafletElement.setIcon(this.props.icon);
       }
       if (this.props.zIndexOffset !== prevProps.zIndexOffset) {
         this.leafletElement.setZIndexOffset(this.props.zIndexOffset);
@@ -76,22 +76,25 @@ var Marker = function (_MapLayer) {
       }
     }
   }, {
+    key: 'renderContent',
+    value: function renderContent() {
+      var container = this.leafletElement._icon;
+      (0, _reactDom.render)(Children.only(this.props.children), container);
+    }
+  }, {
     key: 'render',
     value: function render() {
-      return this.renderChildrenWithProps({
-        popupContainer: this.leafletElement
-      });
+      return null;
     }
   }]);
 
-  return Marker;
-}(_MapLayer3.default);
+  return Divicon;
+}(_reactLeaflet2.default);
 
-Marker.propTypes = {
-  icon: _react.PropTypes.instanceOf(_leaflet.Icon),
+Divicon.propTypes = {
   opacity: _react.PropTypes.number,
-  position: _latlng2.default.isRequired,
+  position: _latlng.latlngType.isRequired,
   zIndexOffset: _react.PropTypes.number
 };
-exports.default = Marker;
+exports.default = Divicon;
 
