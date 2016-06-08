@@ -1,4 +1,4 @@
-import { PropTypes } from 'react';
+import { PropTypes, Children } from 'react';
 import { render } from 'react-dom';
 import { DivIcon, marker } from 'leaflet';
 import { MapLayer } from 'react-leaflet';
@@ -11,12 +11,17 @@ export default class Divicon extends MapLayer {
 
   componentWillMount() {
     super.componentWillMount();
-    this.icon = new DivIcon(props);
     const { map: _map, layerContainer: _lc, position, ...props } = this.props;
+    this.icon = new DivIcon(props);
     this.leafletElement = marker(position, { icon: this.icon,  ...props });
+  }
+  componentDidMount() {
+    super.componentDidMount();
+    this.renderContent();
   }
 
   componentDidUpdate(prevProps) {
+    this.renderContent();
     if (this.props.position !== prevProps.position) {
       this.leafletElement.setLatLng(this.props.position);
     }
@@ -38,10 +43,13 @@ export default class Divicon extends MapLayer {
 
   renderContent() {
     const container = this.leafletElement._icon;
-    render(
-      Children.only(this.props.children),
-      container
-    );
+    if(container){
+      render(
+        Children.only(this.props.children),
+        container
+      );
+    }
+    
   }
 
   render() {

@@ -39,7 +39,6 @@ var Divicon = function (_MapLayer) {
     key: 'componentWillMount',
     value: function componentWillMount() {
       _get(Object.getPrototypeOf(Divicon.prototype), 'componentWillMount', this).call(this);
-      this.icon = new _leaflet.DivIcon(props);
       var _props = this.props;
       var _map = _props.map;
       var _lc = _props.layerContainer;
@@ -47,11 +46,19 @@ var Divicon = function (_MapLayer) {
 
       var props = _objectWithoutProperties(_props, ['map', 'layerContainer', 'position']);
 
+      this.icon = new _leaflet.DivIcon(props);
       this.leafletElement = (0, _leaflet.marker)(position, _extends({ icon: this.icon }, props));
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      _get(Object.getPrototypeOf(Divicon.prototype), 'componentDidMount', this).call(this);
+      this.renderContent();
     }
   }, {
     key: 'componentDidUpdate',
     value: function componentDidUpdate(prevProps) {
+      this.renderContent();
       if (this.props.position !== prevProps.position) {
         this.leafletElement.setLatLng(this.props.position);
       }
@@ -73,7 +80,9 @@ var Divicon = function (_MapLayer) {
     key: 'renderContent',
     value: function renderContent() {
       var container = this.leafletElement._icon;
-      (0, _reactDom.render)(Children.only(this.props.children), container);
+      if (container) {
+        (0, _reactDom.render)(_react.Children.only(this.props.children), container);
+      }
     }
   }, {
     key: 'render',
