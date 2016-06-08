@@ -1,7 +1,7 @@
 import { PropTypes } from 'react';
 import { render } from 'react-dom';
 import { DivIcon, marker } from 'leaflet';
-import MapLayer from 'react-leaflet';
+import { MapLayer } from 'react-leaflet';
 
 export default class Divicon extends MapLayer {
   static propTypes = {

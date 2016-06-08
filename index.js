@@ -18,10 +18,6 @@ var _leaflet = require('leaflet');
 
 var _reactLeaflet = require('react-leaflet');
 
-var _reactLeaflet2 = _interopRequireDefault(_reactLeaflet);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -87,7 +83,7 @@ var Divicon = function (_MapLayer) {
   }]);
 
   return Divicon;
-}(_reactLeaflet2.default);
+}(_reactLeaflet.MapLayer);
 
 Divicon.propTypes = {
   opacity: _react.PropTypes.number,
