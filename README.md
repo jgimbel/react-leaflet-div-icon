@@ -7,6 +7,10 @@ This extends the L.DivIcon class for react-leaflet. It allows a user to render s
 npm install --save react-leaflet-div-icon
 ```
 
+##Options
+
+props are pass directly to [DivIcon](http://leafletjs.com/reference.html#divicon) and [Marker](http://leafletjs.com/reference.html#marker). 
+
 ##Usage
 
 make sure to edit the default `.leaflet-div-icon` class from its default back border, white background when using this.
