@@ -81,8 +81,8 @@ export default class Divicon extends MapLayer {
         const container = this.leafletElement._icon;
         const component = (
             <ContextProvider>
-            {this.props.children}
-        </ContextProvider>
+                {this.props.children}
+            </ContextProvider>
         );
         if(container) {
             render(
