@@ -41,6 +41,9 @@ export default class Divicon extends MapLayer {
     }
   }
 
+  // See https://github.com/PaulLeCam/react-leaflet/issues/275
+  createLeafletElement () {}
+
   renderContent() {
     const container = this.leafletElement._icon;
     if(container){

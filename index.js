@@ -32,19 +32,19 @@ var Divicon = function (_MapLayer) {
   function Divicon() {
     _classCallCheck(this, Divicon);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(Divicon).apply(this, arguments));
+    return _possibleConstructorReturn(this, (Divicon.__proto__ || Object.getPrototypeOf(Divicon)).apply(this, arguments));
   }
 
   _createClass(Divicon, [{
     key: 'componentWillMount',
     value: function componentWillMount() {
-      _get(Object.getPrototypeOf(Divicon.prototype), 'componentWillMount', this).call(this);
-      var _props = this.props;
-      var _map = _props.map;
-      var _lc = _props.layerContainer;
-      var position = _props.position;
+      _get(Divicon.prototype.__proto__ || Object.getPrototypeOf(Divicon.prototype), 'componentWillMount', this).call(this);
 
-      var props = _objectWithoutProperties(_props, ['map', 'layerContainer', 'position']);
+      var _props = this.props,
+          _map = _props.map,
+          _lc = _props.layerContainer,
+          position = _props.position,
+          props = _objectWithoutProperties(_props, ['map', 'layerContainer', 'position']);
 
       this.icon = new _leaflet.DivIcon(props);
       this.leafletElement = (0, _leaflet.marker)(position, _extends({ icon: this.icon }, props));
@@ -52,7 +52,7 @@ var Divicon = function (_MapLayer) {
   }, {
     key: 'componentDidMount',
     value: function componentDidMount() {
-      _get(Object.getPrototypeOf(Divicon.prototype), 'componentDidMount', this).call(this);
+      _get(Divicon.prototype.__proto__ || Object.getPrototypeOf(Divicon.prototype), 'componentDidMount', this).call(this);
       this.renderContent();
     }
   }, {
@@ -76,6 +76,12 @@ var Divicon = function (_MapLayer) {
         }
       }
     }
+
+    // See https://github.com/PaulLeCam/react-leaflet/issues/275
+
+  }, {
+    key: 'createLeafletElement',
+    value: function createLeafletElement() {}
   }, {
     key: 'renderContent',
     value: function renderContent() {
