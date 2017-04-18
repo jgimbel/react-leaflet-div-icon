@@ -1,7 +1,25 @@
-import { PropTypes, Children } from 'react';
-import { render } from 'react-dom';
-import { DivIcon, marker } from 'leaflet';
-import { MapLayer } from 'react-leaflet';
+import React, {Component, PropTypes, Children} from 'react';
+import {render} from 'react-dom';
+import {DivIcon, marker} from 'leaflet';
+import {MapLayer} from 'react-leaflet';
+
+function createContextProvider(context) {
+  class ContextProvider extends Component {
+    getChildContext() {
+      return context;
+    }
+
+    render() {
+      return this.props.children;
+    }
+  }
+
+  ContextProvider.childContextTypes = {};
+  Object.keys(context).forEach(key => {
+    ContextProvider.childContextTypes[key] = PropTypes.any;
+  });
+  return ContextProvider;
+}
 
 export default class Divicon extends MapLayer {
   static propTypes = {
@@ -9,30 +27,35 @@ export default class Divicon extends MapLayer {
     zIndexOffset: PropTypes.number,
   };
 
-  componentWillMount() {
-    super.componentWillMount();
-    const { map: _map, layerContainer: _lc, position, ...props } = this.props;
-    this.icon = new DivIcon(props);
-    this.leafletElement = marker(position, { icon: this.icon,  ...props });
-  }
-  componentDidMount() {
-    super.componentDidMount();
-    this.renderContent();
+  static childContextTypes = {
+    popupContainer: PropTypes.object,
+  };
+
+  getChildContext() {
+    return {
+      popupContainer: this.leafletElement,
+    }
   }
 
-  componentDidUpdate(prevProps) {
-    this.renderContent();
-    if (this.props.position !== prevProps.position) {
-      this.leafletElement.setLatLng(this.props.position);
+  // See https://github.com/PaulLeCam/react-leaflet/issues/275
+  createLeafletElement(newProps) {
+    const {map: _map, layerContainer: _lc, position, ...props} = newProps;
+    this.icon = new DivIcon(props);
+    return marker(position, {icon: this.icon, ...props});
+  }
+
+  updateLeafletElement(fromProps, toProps) {
+    if (toProps.position !== fromProps.position) {
+      this.leafletElement.setLatLng(toProps.position);
     }
-    if (this.props.zIndexOffset !== prevProps.zIndexOffset) {
-      this.leafletElement.setZIndexOffset(this.props.zIndexOffset);
+    if (toProps.zIndexOffset !== fromProps.zIndexOffset) {
+      this.leafletElement.setZIndexOffset(toProps.zIndexOffset);
     }
-    if (this.props.opacity !== prevProps.opacity) {
-      this.leafletElement.setOpacity(this.props.opacity);
+    if (toProps.opacity !== fromProps.opacity) {
+      this.leafletElement.setOpacity(toProps.opacity);
     }
-    if (this.props.draggable !== prevProps.draggable) {
-      if (this.props.draggable) {
+    if (toProps.draggable !== fromProps.draggable) {
+      if (toProps.draggable) {
         this.leafletElement.dragging.enable();
       }
       else {
@@ -41,18 +64,40 @@ export default class Divicon extends MapLayer {
     }
   }
 
-  renderContent() {
+  componentWillMount() {
+    super.componentWillMount();
+    this.leafletElement = this.createLeafletElement(this.props);
+  }
+
+  componentDidMount() {
+    super.componentDidMount();
+    this.renderComponent();
+  }
+
+  componentDidUpdate(fromProps) {
+    this.renderComponent();
+    this.updateLeafletElement(fromProps, this.props);
+  }
+
+  renderComponent = () => {
+    const ContextProvider = createContextProvider({...this.context, ...this.getChildContext()});
     const container = this.leafletElement._icon;
-    if(container){
+    const component = (
+      <ContextProvider>
+        {this.props.children}
+      </ContextProvider>
+    );
+    if (container) {
       render(
-        Children.only(this.props.children),
+        component,
         container
       );
     }
-    
   }
 
   render() {
     return null;
   }
+
 }
+
