@@ -27,6 +27,7 @@
     "leaflet": "^0.7.0",
     "react": "^0.14.0 || ^15.0.0",
     "react-dom": "^0.14.0 || ^15.0.0",
-    "react-leaflet": "^0.11.5"
+    "react-leaflet": "^0.11.5",
+    "prop-types": "^15.5.6"
   }
 }

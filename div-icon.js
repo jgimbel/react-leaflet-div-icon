@@ -1,25 +1,10 @@
-import React, {Component, PropTypes, Children} from 'react';
-import {render} from 'react-dom';
-import {DivIcon, marker} from 'leaflet';
-import {MapLayer} from 'react-leaflet';
+import React from 'react';
+import PropTypes from 'prop-types';
 
-function createContextProvider(context) {
-  class ContextProvider extends Component {
-    getChildContext() {
-      return context;
-    }
+import { DivIcon, marker } from 'leaflet';
 
-    render() {
-      return this.props.children;
-    }
-  }
-
-  ContextProvider.childContextTypes = {};
-  Object.keys(context).forEach(key => {
-    ContextProvider.childContextTypes[key] = PropTypes.any;
-  });
-  return ContextProvider;
-}
+import { MapLayer } from 'react-leaflet';
+import ReactDOM from 'react-dom';
 
 export default class Divicon extends MapLayer {
   static propTypes = {
@@ -31,16 +16,11 @@ export default class Divicon extends MapLayer {
     popupContainer: PropTypes.object,
   };
 
-  getChildContext() {
-    return {
-      popupContainer: this.leafletElement,
-    }
-  }
-
   // See https://github.com/PaulLeCam/react-leaflet/issues/275
   createLeafletElement(newProps) {
-    const {map: _map, layerContainer: _lc, position, ...props} = newProps;
-    this.icon = new DivIcon(props);
+    const {position, ...props} = newProps;
+
+    this.icon = new DivIcon({ ...props });
     return marker(position, {icon: this.icon, ...props});
   }
 
@@ -71,33 +51,30 @@ export default class Divicon extends MapLayer {
 
   componentDidMount() {
     super.componentDidMount();
-    this.renderComponent();
+
+    const el = ReactDOM.findDOMNode(this.divIcon);
+    this.icon.options.html = el.outerHTML;
+    this.leafletElement.setIcon(this.icon);
   }
 
   componentDidUpdate(fromProps) {
-    this.renderComponent();
     this.updateLeafletElement(fromProps, this.props);
   }
 
-  renderComponent = () => {
-    const ContextProvider = createContextProvider({...this.context, ...this.getChildContext()});
-    const container = this.leafletElement._icon;
-    const component = (
-      <ContextProvider>
-        {this.props.children}
-      </ContextProvider>
-    );
-    if (container) {
-      render(
-        component,
-        container
-      );
-    }
-  }
-
   render() {
-    return null;
+    const simulateToGetRefs = [];
+    React.Children.map(this.props.children, (child) => {
+      simulateToGetRefs.push(
+        React.cloneElement(child, {
+            key: child.key,
+            ref: ref => this.divIcon = ref,
+        }))
+    });
+
+    return (
+      <div style={{ display: 'none' }}>
+        { simulateToGetRefs }
+      </div>
+    );
   }
-
 }
-
