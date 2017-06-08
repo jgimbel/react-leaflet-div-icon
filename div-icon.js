@@ -1,4 +1,5 @@
-import React, {Component, PropTypes, Children} from 'react';
+import React, {Component, Children} from 'react';
+import PropTypes from 'prop-types';
 import {render} from 'react-dom';
 import {DivIcon, marker} from 'leaflet';
 import {MapLayer} from 'react-leaflet';
@@ -100,4 +101,3 @@ export default class Divicon extends MapLayer {
   }
 
 }
-
