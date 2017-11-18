@@ -20,6 +20,10 @@ var _leaflet = require('leaflet');
 
 var _reactLeaflet = require('react-leaflet');
 
+var _propTypes = require('prop-types');
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
@@ -57,7 +61,7 @@ function createContextProvider(context) {
 
   ContextProvider.childContextTypes = {};
   Object.keys(context).forEach(function (key) {
-    ContextProvider.childContextTypes[key] = _react.PropTypes.any;
+    ContextProvider.childContextTypes[key] = _propTypes2.default.any;
   });
   return ContextProvider;
 }
@@ -160,11 +164,11 @@ var Divicon = function (_MapLayer) {
 }(_reactLeaflet.MapLayer);
 
 Divicon.propTypes = {
-  opacity: _react.PropTypes.number,
-  zIndexOffset: _react.PropTypes.number
+  opacity: _propTypes2.default.number,
+  zIndexOffset: _propTypes2.default.number
 };
 Divicon.childContextTypes = {
-  popupContainer: _react.PropTypes.object
+  popupContainer: _propTypes2.default.object
 };
 exports.default = Divicon;
 
