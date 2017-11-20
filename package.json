@@ -1,6 +1,6 @@
 {
   "name": "react-leaflet-div-icon",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "marker that will use children as the content if the marker.",
   "main": "index.js",
   "scripts": {
