@@ -167,6 +167,7 @@ Divicon.propTypes = {
   opacity: _propTypes2.default.number,
   zIndexOffset: _propTypes2.default.number
 };
+Divicon.contextTypes = _reactLeaflet.MapLayer.contextTypes;
 Divicon.childContextTypes = {
   popupContainer: _propTypes2.default.object
 };

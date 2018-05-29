@@ -28,6 +28,8 @@ export default class Divicon extends MapLayer {
     zIndexOffset: PropTypes.number,
   };
 
+  static contextTypes = MapLayer.contextTypes;
+
   static childContextTypes = {
     popupContainer: PropTypes.object,
   };
