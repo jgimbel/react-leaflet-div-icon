@@ -136,12 +136,6 @@ var Divicon = function (_MapLayer) {
       }
     }
   }, {
-    key: 'componentWillMount',
-    value: function componentWillMount() {
-      _get(Divicon.prototype.__proto__ || Object.getPrototypeOf(Divicon.prototype), 'componentWillMount', this).call(this);
-      this.leafletElement = this.createLeafletElement(this.props);
-    }
-  }, {
     key: 'componentDidMount',
     value: function componentDidMount() {
       _get(Divicon.prototype.__proto__ || Object.getPrototypeOf(Divicon.prototype), 'componentDidMount', this).call(this);
@@ -170,5 +164,5 @@ Divicon.propTypes = {
 Divicon.childContextTypes = {
   popupContainer: _propTypes2.default.object
 };
-exports.default = Divicon;
+exports.default = (0, _reactLeaflet.withLeaflet)(Divicon);
 
