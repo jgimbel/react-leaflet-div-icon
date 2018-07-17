@@ -47,8 +47,11 @@ export default class Divicon extends MapLayer {
 
   updateLeafletElement(fromProps, toProps) {
     // Even if we don't get a legnth of 2, this will work as the array will return undefined
+    const fromPosition = fromProps.position || []
+    const toPosition = toProps.position || []
+
     if (toProps.position[0] !== fromProps.position[0] ||
-        toProps.position[1] !== fromProps.position[1] || ) {
+        toProps.position[1] !== fromProps.position[1]) {
       this.leafletElement.setLatLng(toProps.position);
     }
     if (toProps.zIndexOffset !== fromProps.zIndexOffset) {

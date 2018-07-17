@@ -118,7 +118,11 @@ var Divicon = function (_MapLayer) {
   }, {
     key: 'updateLeafletElement',
     value: function updateLeafletElement(fromProps, toProps) {
-      if (toProps.position !== fromProps.position) {
+      // Even if we don't get a legnth of 2, this will work as the array will return undefined
+      var fromPosition = fromProps.position || [];
+      var toPosition = toProps.position || [];
+
+      if (toProps.position[0] !== fromProps.position[0] || toProps.position[1] !== fromProps.position[1]) {
         this.leafletElement.setLatLng(toProps.position);
       }
       if (toProps.zIndexOffset !== fromProps.zIndexOffset) {
