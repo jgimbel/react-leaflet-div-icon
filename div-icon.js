@@ -72,6 +72,7 @@ export default class Divicon extends MapLayer {
 
   componentDidMount() {
     super.componentDidMount();
+    this.ContextProvider = createContextProvider({...this.context, ...this.getChildContext()});
     this.renderComponent();
   }
 
@@ -81,12 +82,11 @@ export default class Divicon extends MapLayer {
   }
 
   renderComponent = () => {
-    const ContextProvider = createContextProvider({...this.context, ...this.getChildContext()});
     const container = this.leafletElement._icon;
     const component = (
-      <ContextProvider>
+      <this.ContextProvider>
         {this.props.children}
-      </ContextProvider>
+      </this.ContextProvider>
     );
     if (container) {
       render(
