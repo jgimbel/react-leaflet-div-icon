@@ -22,15 +22,15 @@ function createContextProvider(context) {
   return ContextProvider;
 }
 
-class Divicon extends MapLayer {
+export class Divicon extends MapLayer {
   static propTypes = {
     opacity: PropTypes.number,
     zIndexOffset: PropTypes.number,
-  };
+  }
 
   static childContextTypes = {
     popupContainer: PropTypes.object,
-  };
+  }
 
   getChildContext() {
     return {
