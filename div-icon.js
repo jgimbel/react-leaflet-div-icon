@@ -1,41 +1,13 @@
 import React, {Component} from 'react';
-import {render} from 'react-dom';
+import ReactDOM, {render} from 'react-dom';
 import {DivIcon, marker} from 'leaflet';
 import {MapLayer, withLeaflet} from 'react-leaflet';
 import PropTypes from 'prop-types';
-
-function createContextProvider(context) {
-  class ContextProvider extends Component {
-    getChildContext() {
-      return context;
-    }
-
-    render() {
-      return this.props.children;
-    }
-  }
-
-  ContextProvider.childContextTypes = {};
-  Object.keys(context).forEach(key => {
-    ContextProvider.childContextTypes[key] = PropTypes.any;
-  });
-  return ContextProvider;
-}
 
 export class Divicon extends MapLayer {
   static propTypes = {
     opacity: PropTypes.number,
     zIndexOffset: PropTypes.number,
-  }
-
-  static childContextTypes = {
-    popupContainer: PropTypes.object,
-  }
-
-  getChildContext() {
-    return {
-      popupContainer: this.leafletElement,
-    }
   }
 
   // See https://github.com/PaulLeCam/react-leaflet/issues/275
@@ -65,35 +37,19 @@ export class Divicon extends MapLayer {
     }
   }
 
-  componentDidMount() {
-    super.componentDidMount();
-    this.renderComponent();
-  }
-
   componentDidUpdate(fromProps) {
-    this.renderComponent();
     this.updateLeafletElement(fromProps, this.props);
   }
 
-  renderComponent = () => {
-    const ContextProvider = createContextProvider({...this.context, ...this.getChildContext()});
-    const container = this.leafletElement._icon;
-    const component = (
-      <ContextProvider>
-        {this.props.children}
-      </ContextProvider>
-    );
-    if (container) {
-      render(
-        component,
-        container
-      );
-    }
-  }
-
   render() {
-    return null;
+    const container = this.leafletElement._icon;
+
+    if (container) {
+      return ReactDOM.createPortal(this.props.children, container);
+    } else {
+      return null;
+    }
   }
 }
 
-export default withLeaflet(Divicon)
+export default withLeaflet(Divicon);
