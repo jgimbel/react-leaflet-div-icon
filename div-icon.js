@@ -50,8 +50,8 @@ export default class Divicon extends MapLayer {
     const fromPosition = fromProps.position || []
     const toPosition = toProps.position || []
 
-    if (toProps.position[0] !== fromProps.position[0] ||
-        toProps.position[1] !== fromProps.position[1]) {
+    if (toPosition[0] !== fromPosition[0] ||
+        toPosition[1] !== fromPosition[1]) {
       this.leafletElement.setLatLng(toProps.position);
     }
     if (toProps.zIndexOffset !== fromProps.zIndexOffset) {
