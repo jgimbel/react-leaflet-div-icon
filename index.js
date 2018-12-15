@@ -9,6 +9,8 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
@@ -38,17 +40,20 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var Divicon = exports.Divicon = function (_MapLayer) {
   _inherits(Divicon, _MapLayer);
 
-  function Divicon() {
+  function Divicon(props) {
     _classCallCheck(this, Divicon);
 
-    return _possibleConstructorReturn(this, (Divicon.__proto__ || Object.getPrototypeOf(Divicon)).apply(this, arguments));
+    var _this = _possibleConstructorReturn(this, (Divicon.__proto__ || Object.getPrototypeOf(Divicon)).call(this, props));
+
+    _get(Divicon.prototype.__proto__ || Object.getPrototypeOf(Divicon.prototype), 'componentDidMount', _this).call(_this);
+    return _this;
   }
+
+  // See https://github.com/PaulLeCam/react-leaflet/issues/275
+
 
   _createClass(Divicon, [{
     key: 'createLeafletElement',
-
-
-    // See https://github.com/PaulLeCam/react-leaflet/issues/275
     value: function createLeafletElement(newProps) {
       var _map = newProps.map,
           _lc = newProps.layerContainer,
@@ -56,7 +61,9 @@ var Divicon = exports.Divicon = function (_MapLayer) {
           props = _objectWithoutProperties(newProps, ['map', 'layerContainer', 'position']);
 
       this.icon = new _leaflet.DivIcon(props);
-      return (0, _leaflet.marker)(position, _extends({ icon: this.icon }, props));
+      var m = (0, _leaflet.marker)(position, _extends({ icon: this.icon }, props));
+      this.contextValue = _extends({}, props.leaflet, { popupContainer: m });
+      return m;
     }
   }, {
     key: 'updateLeafletElement',
@@ -87,9 +94,12 @@ var Divicon = exports.Divicon = function (_MapLayer) {
     key: 'render',
     value: function render() {
       var container = this.leafletElement._icon;
-
       if (container) {
-        return _reactDom2.default.createPortal(this.props.children, container);
+        return _reactDom2.default.createPortal(_react2.default.createElement(
+          _reactLeaflet.LeafletProvider,
+          { value: this.contextValue },
+          this.props.children
+        ), container);
       } else {
         return null;
       }
@@ -101,6 +111,7 @@ var Divicon = exports.Divicon = function (_MapLayer) {
 
 Divicon.propTypes = {
   opacity: _propTypes2.default.number,
-  zIndexOffset: _propTypes2.default.number };
+  zIndexOffset: _propTypes2.default.number
+};
 exports.default = (0, _reactLeaflet.withLeaflet)(Divicon);
 

@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
-import ReactDOM, {render} from 'react-dom';
-import {DivIcon, marker} from 'leaflet';
-import {MapLayer, withLeaflet} from 'react-leaflet';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { DivIcon, marker } from 'leaflet';
+import { MapLayer, withLeaflet, LeafletProvider } from 'react-leaflet';
 import PropTypes from 'prop-types';
 
 export class Divicon extends MapLayer {
@@ -10,11 +10,18 @@ export class Divicon extends MapLayer {
     zIndexOffset: PropTypes.number,
   }
 
+  constructor(props){
+    super(props)
+    super.componentDidMount();
+  }
+
   // See https://github.com/PaulLeCam/react-leaflet/issues/275
   createLeafletElement(newProps) {
-    const {map: _map, layerContainer: _lc, position, ...props} = newProps;
+    const { map: _map, layerContainer: _lc, position, ...props } = newProps;
     this.icon = new DivIcon(props);
-    return marker(position, {icon: this.icon, ...props});
+    const m = marker(position, { icon: this.icon, ...props });
+    this.contextValue = { ...props.leaflet, popupContainer: m }
+    return m
   }
 
   updateLeafletElement(fromProps, toProps) {
@@ -43,13 +50,15 @@ export class Divicon extends MapLayer {
 
   render() {
     const container = this.leafletElement._icon;
-
     if (container) {
-      return ReactDOM.createPortal(this.props.children, container);
-    } else {
-      return null;
+      return ReactDOM.createPortal(<LeafletProvider value={this.contextValue}>
+        {this.props.children}
+      </LeafletProvider>, container)
+    }
+    else {
+      return null
     }
   }
 }
 
-export default withLeaflet(Divicon);
+export default withLeaflet(Divicon)
