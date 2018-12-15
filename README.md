@@ -21,6 +21,7 @@ import DivIcon from 'react-leaflet-div-icon';
 export default class UserLocationExample extends Component {
   constructor() {
     super();
+    this.mapRef = React.createRef()
     this.state = {
       hasLocation: false,
       latlng: {
@@ -30,11 +31,11 @@ export default class UserLocationExample extends Component {
     };
   }
 
-  handleClick() {
-    this.refs.map.leafletElement.locate();
+  handleClick = () => {
+    this.mapRef.current.leafletElement.locate();
   }
 
-  handleLocationFound(e) {
+  handleLocationFound = (e) => {
     this.setState({
       hasLocation: true,
       latlng: e.latlng,
@@ -57,9 +58,9 @@ export default class UserLocationExample extends Component {
       <Map
         center={this.state.latlng}
         length={4}
-        onClick={::this.handleClick}
-        onLocationfound={::this.handleLocationFound}
-        ref='map'
+        onClick={() => this.handleClick()}
+        onLocationfound={(e) => this.handleLocationFound(e)}
+        ref={this.mapRef}
         zoom={13}>
         <TileLayer
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
