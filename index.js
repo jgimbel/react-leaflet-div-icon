@@ -70,7 +70,8 @@ var Divicon = function (_MapLayer) {
   _inherits(Divicon, _MapLayer);
 
   function Divicon() {
-    var _ref;
+    var _ref,
+        _this3 = this;
 
     var _temp, _this2, _ret;
 
@@ -81,10 +82,9 @@ var Divicon = function (_MapLayer) {
     }
 
     return _ret = (_temp = (_this2 = _possibleConstructorReturn(this, (_ref = Divicon.__proto__ || Object.getPrototypeOf(Divicon)).call.apply(_ref, [this].concat(args))), _this2), _this2.renderComponent = function () {
-      var ContextProvider = createContextProvider(_extends({}, _this2.context, _this2.getChildContext()));
       var container = _this2.leafletElement._icon;
       var component = _react2.default.createElement(
-        ContextProvider,
+        _this3.ContextProvider,
         null,
         _this2.props.children
       );
@@ -118,7 +118,11 @@ var Divicon = function (_MapLayer) {
   }, {
     key: 'updateLeafletElement',
     value: function updateLeafletElement(fromProps, toProps) {
-      if (toProps.position !== fromProps.position) {
+      // Even if we don't get a legnth of 2, this will work as the array will return undefined
+      var fromPosition = fromProps.position || [];
+      var toPosition = toProps.position || [];
+
+      if (toProps.position[0] !== fromProps.position[0] || toProps.position[1] !== fromProps.position[1]) {
         this.leafletElement.setLatLng(toProps.position);
       }
       if (toProps.zIndexOffset !== fromProps.zIndexOffset) {
@@ -145,6 +149,7 @@ var Divicon = function (_MapLayer) {
     key: 'componentDidMount',
     value: function componentDidMount() {
       _get(Divicon.prototype.__proto__ || Object.getPrototypeOf(Divicon.prototype), 'componentDidMount', this).call(this);
+      this.ContextProvider = createContextProvider(_extends({}, this.context, this.getChildContext()));
       this.renderComponent();
     }
   }, {
