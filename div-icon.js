@@ -1,48 +1,27 @@
-import React, {Component, Children} from 'react';
-import {render} from 'react-dom';
-import {DivIcon, marker} from 'leaflet';
-import {MapLayer} from 'react-leaflet';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { DivIcon, marker } from 'leaflet';
+import { MapLayer, withLeaflet, LeafletProvider } from 'react-leaflet';
 import PropTypes from 'prop-types';
 
-function createContextProvider(context) {
-  class ContextProvider extends Component {
-    getChildContext() {
-      return context;
-    }
-
-    render() {
-      return this.props.children;
-    }
-  }
-
-  ContextProvider.childContextTypes = {};
-  Object.keys(context).forEach(key => {
-    ContextProvider.childContextTypes[key] = PropTypes.any;
-  });
-  return ContextProvider;
-}
-
-export default class Divicon extends MapLayer {
+export class Divicon extends MapLayer {
   static propTypes = {
     opacity: PropTypes.number,
     zIndexOffset: PropTypes.number,
-  };
+  }
 
-  static childContextTypes = {
-    popupContainer: PropTypes.object,
-  };
-
-  getChildContext() {
-    return {
-      popupContainer: this.leafletElement,
-    }
+  constructor(props){
+    super(props)
+    super.componentDidMount();
   }
 
   // See https://github.com/PaulLeCam/react-leaflet/issues/275
   createLeafletElement(newProps) {
-    const {map: _map, layerContainer: _lc, position, ...props} = newProps;
+    const { map: _map, layerContainer: _lc, position, ...props } = newProps;
     this.icon = new DivIcon(props);
-    return marker(position, {icon: this.icon, ...props});
+    const m = marker(position, { icon: this.icon, ...props });
+    this.contextValue = { ...props.leaflet, popupContainer: m }
+    return m
   }
 
   updateLeafletElement(fromProps, toProps) {
@@ -65,40 +44,21 @@ export default class Divicon extends MapLayer {
     }
   }
 
-  componentWillMount() {
-    super.componentWillMount();
-    this.leafletElement = this.createLeafletElement(this.props);
-  }
-
-  componentDidMount() {
-    super.componentDidMount();
-    this.renderComponent();
-  }
-
   componentDidUpdate(fromProps) {
-    this.renderComponent();
     this.updateLeafletElement(fromProps, this.props);
   }
 
-  renderComponent = () => {
-    const ContextProvider = createContextProvider({...this.context, ...this.getChildContext()});
+  render() {
     const container = this.leafletElement._icon;
-    const component = (
-      <ContextProvider>
-        {this.props.children}
-      </ContextProvider>
-    );
     if (container) {
-      render(
-        component,
-        container
-      );
+      return ReactDOM.createPortal(<LeafletProvider value={this.contextValue}>
+        {this.props.children}
+      </LeafletProvider>, container)
+    }
+    else {
+      return null
     }
   }
-
-  render() {
-    return null;
-  }
-
 }
 
+export default withLeaflet(Divicon)
